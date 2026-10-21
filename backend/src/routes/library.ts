@@ -1,6 +1,7 @@
 import { affiliateUrl, publicationCaption } from '../services/publication.service.js';
 import {withMediaLock} from '../services/media-lock.service.js';
 import {deleteEdit,deleteLibraryVideo} from '../services/delete-edit.service.js';
+import {createPhotoReel} from '../services/photo-reel.service.js';
 import express, { Router } from 'express';
 import { route, text, validateUpload } from '../services/manual.service.js';
 import { listVideos, importVideo, newEdit, enqueueEdit } from '../services/video.service.js';
@@ -27,6 +28,7 @@ router.post('/library',express.raw({type:'application/octet-stream',limit:'250mb
   res.status(201).json(await importVideo(String(req.query.category??'Sem categoria'),String(req.query.name??''),req.body));
 }));
 router.get('/edits',route(async(_req,res)=>{res.json((await store.read()).edits.filter(e=>!e.hidden_at).reverse());}));
+router.post('/photo-reels',route(async(req,res)=>{res.status(202).json(await createPhotoReel(req.body??{}));}));
 router.delete('/edits/:id/media',route(async(req,res)=>{res.json(await deleteEdit(String(req.params.id),'media'));}));
 router.delete('/edits/:id',route(async(req,res)=>{res.json(await deleteEdit(String(req.params.id),'edit'));}));
 router.get('/edits/:id',route(async(req,res)=>{const job=(await store.read()).edits.find(e=>e.id===req.params.id);if(!job)throw problem('Edição não encontrada',404);res.json(job);}));

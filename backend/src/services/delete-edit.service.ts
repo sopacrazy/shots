@@ -1,6 +1,6 @@
 import {resolve} from 'node:path';
 import {store,dataDirectory,problem,type LocalStore} from './local.service.js';
-import {safeUnlink,originals} from './media-cleanup.service.js';
+import {safeUnlink,originals,deletePhotoAssets} from './media-cleanup.service.js';
 import {withMediaLock} from './media-lock.service.js';
 import {blockingSchedules} from './scheduler.service.js';
 
@@ -33,6 +33,7 @@ export async function deleteEdit(id:string,mode:'media'|'edit',options:{database
     });
     try{await safeUnlink(directory,resolve(directory,'files/videos/edits',`${id}.mp4`));}
     catch(error){await database.change(db=>{const edit=db.edits.find(e=>e.id===id);if(edit){edit.output_url=job.output_url;edit.media_deleted_at=job.media_deleted_at;}});throw error;}
+    await deletePhotoAssets(job,directory);
     let sourceDeleted=false;
     if(mode==='media'){
       const db=await database.read();

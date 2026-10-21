@@ -64,15 +64,22 @@ export function enqueueEdit(editId: string) {
 }
 export async function renderProductEdit(id: string) {
   const edit = await store.change(db => { const job=db.edits.find(e=>e.id===id); if(!job) throw problem('Edição não encontrada',404); job.status='processing';return job; });
-  const source = (await listVideos()).find(v=>v.id===edit.source_id); if(!source) throw problem('Vídeo original não encontrado');
   const output = filePath('videos',`edits/${id}.mp4`); await mkdir(dirname(output),{recursive:true});
-  const {stdout}=await exec(ffmpegPath('ffprobe'),['-v','error','-show_entries','format=duration','-of','json',filePath('library',source.relative_path)],{timeout:30000});
-  const duration=Number(JSON.parse(stdout).format?.duration);
-  if(!Number.isFinite(duration)||duration<=0||duration>1800)throw problem('Use vídeos de até 30 minutos');
   const browserExecutable=detectChrome();if(!browserExecutable)throw new Error('Instale Google Chrome para editar vídeos');
   const serveUrl=await getBundle();
-  const inputProps={videoUrl:mediaUrl(source.url),durationSeconds:duration,watermark:edit.watermark,position:edit.watermark_position,logoUrl:edit.logo_url?mediaUrl(edit.logo_url):null};
-  const composition=await selectComposition({serveUrl,id:'ProductVideo',inputProps,browserExecutable});
+  let inputProps:Record<string,unknown>;let compositionId='ProductVideo';
+  if(edit.photo_reel){
+    const photos=edit.photo_reel;let musicFrames=30;
+    if(photos.music_url){const {stdout}=await exec(ffmpegPath('ffprobe'),['-v','error','-show_entries','format=duration','-of','json',localMediaPath(photos.music_url)],{timeout:15000});musicFrames=Math.max(1,Math.floor(Number(JSON.parse(stdout).format.duration)*30));}
+    compositionId='PhotoReel';inputProps={images:photos.images.map(mediaUrl),musicUrl:photos.music_url?mediaUrl(photos.music_url):null,musicFrames,secondsPerImage:photos.seconds_per_image,transition:photos.transition,musicVolume:photos.music_volume,fit:photos.fit,watermark:edit.watermark,position:edit.watermark_position,logoUrl:edit.logo_url?mediaUrl(edit.logo_url):null};
+  }else{
+    const source = (await listVideos()).find(v=>v.id===edit.source_id); if(!source) throw problem('Vídeo original não encontrado');
+    const {stdout}=await exec(ffmpegPath('ffprobe'),['-v','error','-show_entries','format=duration','-of','json',filePath('library',source.relative_path)],{timeout:30000});
+    const duration=Number(JSON.parse(stdout).format?.duration);
+    if(!Number.isFinite(duration)||duration<=0||duration>1800)throw problem('Use vídeos de até 30 minutos');
+    inputProps={videoUrl:mediaUrl(source.url),durationSeconds:duration,watermark:edit.watermark,position:edit.watermark_position,logoUrl:edit.logo_url?mediaUrl(edit.logo_url):null};
+  }
+  const composition=await selectComposition({serveUrl,id:compositionId,inputProps,browserExecutable});
   await renderMedia({serveUrl,composition,inputProps,browserExecutable,codec:'h264',outputLocation:output,videoBitrate:'6M',audioCodec:'aac',concurrency:2,timeoutInMilliseconds:120000});
   await store.change(db=>{const job=db.edits.find(e=>e.id===id)!;job.status='ready';job.error=null;job.output_url=fileUrl('videos',`edits/${id}.mp4`);});
 }

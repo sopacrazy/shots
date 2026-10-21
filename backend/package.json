@@ -10,6 +10,7 @@
     "test": "node --import tsx --test test/*.test.ts",
     "test:render": "node test/render-smoke.mjs",
     "test:products": "node test/product-smoke.mjs"
+    ,"test:photos": "node test/photo-smoke.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.459",

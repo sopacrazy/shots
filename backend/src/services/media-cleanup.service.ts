@@ -26,6 +26,15 @@ export async function originals(directory:string){
   }
   await walk(base);return result;
 }
+export async function deletePhotoAssets(edit:VideoEdit,directory=dataDirectory()){
+  if(!edit.photo_reel)return;
+  const prefix=`/api/files/audio/photo-reels/${edit.id}/`;
+  for(const url of [...edit.photo_reel.images,...(edit.photo_reel.music_url?[edit.photo_reel.music_url]:[])]){
+    if(!url.startsWith(prefix))throw new Error('Arquivo da montagem fora do diretório da edição');
+    const name=url.slice(prefix.length);if(!/^(?:\d+\.(?:png|jpg|webp)|music\.(?:mp3|wav))$/.test(name)||!/^[0-9a-f-]{36}$/i.test(edit.id))throw new Error('Arquivo de montagem inválido');
+    await safeUnlink(directory,resolve(directory,'files/audio/photo-reels',edit.id,name));
+  }
+}
 export async function cleanupPublishedMedia(options:{database?:LocalStore;directory?:string;now?:number;removeOriginals?:boolean}={}){
   const database=options.database??store;const directory=options.directory??dataDirectory();const now=options.now??Date.now();
   return withMediaLock(async()=>{
@@ -36,6 +45,7 @@ export async function cleanupPublishedMedia(options:{database?:LocalStore;direct
       // Never remove a file referenced by a different unfinished publication.
       if(db.edits.some(other=>other.id!==edit.id&&other.output_url===edit.output_url&&!expired(other,now)))continue;
       await safeUnlink(directory,resolve(directory,'files','videos','edits',`${edit.id}.mp4`));
+      await deletePhotoAssets(edit,directory);
       await database.change(next=>{const item=next.edits.find(e=>e.id===edit.id);if(item){item.output_url=null;item.media_deleted_at=new Date(now).toISOString();}});outputs++;
     }
     if(options.removeOriginals){

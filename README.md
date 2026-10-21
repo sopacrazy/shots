@@ -28,6 +28,18 @@ Formatos de entrada: MP4, MOV, WebM ou M4V; limite de 250 MB por importação e 
 
 ## Testar tudo localmente primeiro
 
+## Reel com fotos e música
+
+Abra **Reel com fotos e música**. Envie de 2 a 12 fotos PNG/JPEG/WebP (até 5 MB cada), use as setas para ordenar e escolha de 2 a 8 segundos por foto. A montagem combina zoom suave alternado com dissolução ou deslizamento; cada transição sobrepõe 0,6 segundo. O enquadramento pode preservar a foto com fundo desfocado ou preencher a tela recortando bordas.
+
+Envie uma música MP3/WAV opcional (até 12 MB), ajuste o volume e revise o MP4 com áudio antes de publicar. A trilha é repetida se for curta e recebe fade de entrada/saída. Fotos, música e logo juntos têm limite de 30 MB. Use materiais autorizados para publicação. A música é incorporada ao MP4; este recurso não acessa a biblioteca musical do Instagram.
+
+Preencha descrição, link de afiliado e marca d’água (texto e/ou logo). A geração usa a mesma fila persistente das edições de vídeo; o resultado aparece na própria seção e em **Últimas edições**, podendo ser baixado, publicado com confirmação ou escolhido no agendador. A limpeza após 24 horas da publicação e a exclusão manual removem também as fotos e a música exclusivas da montagem, preservando o logo salvo e os dados da automação LINK.
+
+`npm run test:photos --workspace=backend`, após compilar o backend, renderiza uma montagem temporária de duas imagens com áudio sintético e valida resolução, duração, trilha e download, sem publicar no Instagram.
+
+## Testar tudo localmente primeiro
+
 Edição de vídeos, marca d’água PNG/texto, áudio, link de afiliado, histórico e download funcionam sem configurar Instagram.
 
 Abra **Comentou LINK → resposta + Direct → Teste local — sem enviar mensagens**. Use um produto salvo ou o link de exemplo, digite LINK e clique em **Simular comentário**. A prévia mostra primeiro a resposta pública natural e depois o Direct com o link correto. O simulador não chama a Meta, não publica, não envia mensagens e não altera os registros reais de envio. Também é possível testar palavras que não devem disparar a automação.

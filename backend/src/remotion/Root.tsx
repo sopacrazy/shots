@@ -1,4 +1,5 @@
 import React from 'react';
+import {PhotoReelComposition} from './PhotoReelComposition';
 import { ProductComposition } from './ProductComposition';
 import { Composition } from 'remotion';
 import { VideoComposition } from './VideoComposition';
@@ -10,6 +11,9 @@ const DEFAULT_DURATION = 45; // segundos
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+    <Composition id="PhotoReel" component={PhotoReelComposition} width={1080} height={1920} fps={30} durationInFrames={90}
+      defaultProps={{images:[] as string[],musicUrl:null as string|null,musicFrames:30,secondsPerImage:3,transition:'fade',musicVolume:.45,fit:'contain' as 'contain'|'cover',watermark:'',position:'top-right',logoUrl:null as string|null}}
+      calculateMetadata={({props})=>({durationInFrames:Math.max(1,props.images.length*Math.round(props.secondsPerImage*30)-Math.max(0,props.images.length-1)*18)})}/>
     <Composition
       id="AstraShort"
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

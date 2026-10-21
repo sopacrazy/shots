@@ -126,6 +126,7 @@ export async function removeProjectFiles(id: string) {
 }
 
 export interface VideoEdit {
+  photo_reel?: {images:string[];music_url:string|null;seconds_per_image:number;transition:'fade'|'slide';music_volume:number;fit:'contain'|'cover'};
   id: string; created_at: string; source_id: string; source_name: string; category: string;
   caption: string; affiliate_url?: string | null; watermark: string; watermark_position: 'top-left'|'top-right'|'bottom-left'|'bottom-right';
   logo_url: string | null; output_url: string | null; status: 'queued'|'processing'|'ready'|'error'; error: string | null;
