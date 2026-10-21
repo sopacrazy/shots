@@ -10,6 +10,7 @@ import {initializeEnvironment} from './services/settings.service.js';
 import {startScheduler} from './services/scheduler.service.js';
 import {startMediaCleanup} from './services/media-cleanup.service.js';
 import schedulerRouter from './routes/scheduler.js';
+import shopeeRouter from './routes/shopee.js';
 
 import instagramRouter from './routes/instagram.js';
 import anthropicRouter from './routes/anthropic.js';
@@ -63,6 +64,7 @@ app.use('/api', libraryRouter);
 app.use('/api/instagram', instagramRouter);
 app.use('/api/ai', anthropicRouter);
 app.use('/api/schedules', schedulerRouter);
+app.use('/api/shopee', shopeeRouter);
 app.use('/api/folders', foldersRouter);
 app.use('/api/projects', projectsRouter);
 app.use('/api/projects/:projectId/script', scriptsRouter);

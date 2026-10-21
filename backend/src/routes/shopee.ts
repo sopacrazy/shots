@@ -1,0 +1,11 @@
+import {Router} from 'express';
+import {route} from '../services/manual.service.js';
+import {store} from '../services/local.service.js';
+import {shopeeStatus,searchShopee,saveShopeeProduct} from '../services/shopee.service.js';
+const router=Router();
+router.get('/status',route(async(_req,res)=>{res.json(await shopeeStatus());}));
+router.get('/products',route(async(req,res)=>{res.json(await searchShopee(req.query));}));
+router.get('/favorites',route(async(_req,res)=>{res.json((await store.read()).shopee_favorites??[]);}));
+router.post('/favorites',route(async(req,res)=>{res.json(await saveShopeeProduct(req.body??{}));}));
+router.delete('/favorites/:id',route(async(req,res)=>{await store.change(db=>{db.shopee_favorites=(db.shopee_favorites??[]).filter(p=>p.id!==req.params.id);});res.json({deleted:true});}));
+export default router;

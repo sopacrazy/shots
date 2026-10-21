@@ -6,9 +6,9 @@ async function request(path:string,body?:unknown){
   const result=await response.json().catch(()=>{throw new Error('Backend indisponível. Atualize a página em alguns instantes.');});
   if(!response.ok)throw new Error(result.error??'Falha na geração');return result;
 }
-export default function ProductDescriptionAI({affiliateLink,autoDm,currentCaption,onApply}:{affiliateLink:string;autoDm:boolean;currentCaption:string;onApply:(description:string)=>void}){
+export default function ProductDescriptionAI({affiliateLink,autoDm,currentCaption,onApply,initialDetails=''}:{initialDetails?:string;affiliateLink:string;autoDm:boolean;currentCaption:string;onApply:(description:string)=>void}){
   const [configured,setConfigured]=useState(false);
-  const [url,setUrl]=useState(''),[details,setDetails]=useState(''),[busy,setBusy]=useState(''),[error,setError]=useState('');
+  const [url,setUrl]=useState(''),[details,setDetails]=useState(initialDetails),[busy,setBusy]=useState(''),[error,setError]=useState('');
   const [draft,setDraft]=useState<{description:string;source:string;input:string;affiliate:string;autoDm:boolean}|null>(null);
   useEffect(()=>{request('status').then(s=>setConfigured(s.configured)).catch(e=>setError(e.message));},[]);
   const productUrl=url.trim()||affiliateLink.trim();

@@ -13,6 +13,12 @@ O backend aceita conexões locais em 127.0.0.1. Porta e caminhos podem ser perso
 
 ## Vídeos de produtos (tela inicial)
 
+### Garimpo Shopee
+
+Configure `SHOPEE_APP_ID` e `SHOPEE_APP_SECRET` no `.env` do backend. A seção **Garimpo Shopee** busca 20 produtos por página por nome ou categoria, com ordenação por vendas, comissão, preço ou relevância. O filtro de preço se aplica à página carregada. As ofertas mostram preço, avaliações, vendas, comissão estimada e data da consulta; os valores podem mudar e não garantem ganhos. Favoritos ficam no banco local, com limite de 200 produtos.
+
+**Preparar publicação** preenche o nome e o link de afiliado no editor; selecione um vídeo correspondente e use a geração de descrição com IA se desejar. Trocar um produto pede confirmação quando já existe texto ou link. Não há download automático de vídeos nem publicação automática. As credenciais são usadas somente no servidor para assinar consultas à API oficial, nunca no frontend. Ao implantar, configure as credenciais também no `.env` da VPS.
+
 1. Copie seus vídeos para `data/library/Categoria/arquivo.mp4` (ex.: Cozinha, Beleza, Eletrônicos). A biblioteca procura subpastas automaticamente. Também é possível importar uma pasta ou arquivos pela interface; a importação copia os arquivos e preserva os originais.
 2. Selecione um vídeo e escreva a descrição do produto. A legenda fica **somente na descrição da publicação**, sem texto adicionado ao vídeo. O campo opcional **Link do produto afiliado** salva o endereço separadamente e o inclui ao final da descrição, preservando os parâmetros de afiliado. A prévia e a revisão de publicação mostram o texto completo; descrição e link juntos têm limite de 2200 caracteres.
 3. Informe sua marca d’água em texto (ex.: @sualoja) ou envie uma imagem PNG/WebP/JPEG e escolha um dos quatro cantos. PNG com transparência mantém o fundo transparente na sobreposição; texto e imagem podem ser combinados. A imagem salva pode ser reutilizada pelo histórico de edições.

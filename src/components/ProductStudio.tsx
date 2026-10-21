@@ -1,3 +1,4 @@
+import ShopeeProspector from './ShopeeProspector';
 import { formatPublicationCaption as combinedCaption } from '../lib/caption';
 import InstagramAutomation from './InstagramAutomation';
 import ProductDescriptionAI from './ProductDescriptionAI';
@@ -17,6 +18,7 @@ export default function ProductStudio(){
   const [caption,setCaption]=useState(''),[watermark,setWatermark]=useState(''),[position,setPosition]=useState('top-right');
   const [affiliateLink,setAffiliateLink]=useState('');
   const [autoDm,setAutoDm]=useState(true);
+  const [productBrief,setProductBrief]=useState('');
   const [savedLogoUrl,setSavedLogoUrl]=useState('');
   const [logo,setLogo]=useState<{fileBase64:string;mimeType:string}|null>(null),[logoPreview,setLogoPreview]=useState('');
   const [busy,setBusy]=useState(''),[error,setError]=useState(''),[notice,setNotice]=useState('');
@@ -73,6 +75,7 @@ export default function ProductStudio(){
     {error&&<div className="studio-alert" role="alert">{error}<button onClick={()=>setError('')} aria-label="Fechar erro"><X size={16}/></button></div>}
     {notice&&<p className="studio-notice" role="status">{notice}</p>}
     {busy&&<div className="studio-notice" role="status"><Loader2 className="animate-spin" size={16}/>{busy}</div>}
+    <ShopeeProspector onPrepare={product=>{if(busy){setError('Aguarde a operação atual terminar.');return;}if((caption.trim()||affiliateLink.trim())&&!window.confirm('Substituir a descrição e o link atuais pelos dados deste produto?'))return;setProductBrief(product.name);setCaption(product.name);setAffiliateLink(product.affiliateUrl);setAutoDm(true);setActive(null);setNotice('Produto preparado. Selecione o vídeo correspondente na biblioteca e gere a descrição com IA.');editorPanel.current?.scrollIntoView({behavior:'smooth',block:'start'});}}/>
     <div className="studio-columns">
       <section className="studio-card library-card"><div className="studio-title"><h2><FolderOpen size={20}/>Sua biblioteca</h2><button aria-label="Atualizar biblioteca" className="studio-icon" onClick={()=>{setError('');void refresh().catch(e=>setError(e.message));}}><RefreshCw size={18}/></button></div>
         <p className="studio-muted">Copie vídeos para <code>data/library/Categoria/</code> ou importe abaixo.</p>
@@ -88,7 +91,7 @@ export default function ProductStudio(){
           <div className="studio-preview"><video key={active?.output_url??selected.url} src={api.mediaUrl(active?.output_url??selected.url)} controls playsInline preload="metadata"/>{!active?.output_url&&watermark&&<span className={`watermark-preview ${position} ${logoPreview?'has-logo':''}`}>{watermark}</span>}{!active?.output_url&&logoPreview&&<img className={`logo-preview ${position}`} src={logoPreview} alt="Prévia da marca"/>}</div>
           <p className="studio-source">{active?.source_name??selected.name}{active?.output_url?' · versão editada':' · original'}</p>
           {active?.media_deleted_at&&<p className="studio-notice">O MP4 editado foi removido da VPS. O Reel e sua automação continuam ativos no Instagram.</p>}
-          <ProductDescriptionAI key={selected.id} affiliateLink={affiliateLink} autoDm={autoDm} currentCaption={caption} onApply={description=>{setCaption(description);setActive(null);}}/>
+          <ProductDescriptionAI key={selected.id+productBrief} initialDetails={productBrief} affiliateLink={affiliateLink} autoDm={autoDm} currentCaption={caption} onApply={description=>{setCaption(description);setActive(null);}}/>
           <label className="studio-field">Descrição da publicação<textarea rows={4} maxLength={2200} value={caption} onChange={e=>{setCaption(e.target.value);setActive(null);}} placeholder="Apresente o produto, benefícios, chamada para ação e hashtags..."/><small>{finalCaption.length}/2200 com a chamada LINK e o link · não aparece dentro do vídeo</small></label>
           <label className="studio-field">Link do produto afiliado (opcional)<input type="url" maxLength={2048} value={affiliateLink} onChange={e=>{setAffiliateLink(e.target.value);setActive(null);}} placeholder="https://loja.com/produto?afiliado=seucodigo"/><small>Será incluído no final da descrição, preservando seu código de afiliado.</small></label>
           <label className="automation-checkbox"><input type="checkbox" checked={autoDm} disabled={!affiliateLink.trim()} onChange={e=>{setAutoDm(e.target.checked);setActive(null);}}/>Responder ao comentário LINK e enviar este link no Direct</label>

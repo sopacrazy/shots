@@ -7,6 +7,7 @@ import type { Project, Script, Scene, Narration, ExportMetadata, Folder, Project
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 export function dataDirectory() { return resolve(root, process.env.LOCAL_DATA_DIR || 'data'); }
 export interface Database {
+  shopee_favorites?: import('./shopee.service.js').ShopeeProduct[];
   brand?: {watermark:string;watermark_position:string;logo_url:string|null};
   version: 1; projects: Project[]; folders: Folder[]; scripts: Script[];
   scenes: Scene[]; narrations: Narration[]; export_metadata: ExportMetadata[]; edits: VideoEdit[]; comment_replies: CommentReply[];
