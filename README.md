@@ -44,7 +44,7 @@ Formatos de entrada: MP4, MOV, WebM ou M4V; limite de 250 MB por importação e 
 
 ## Reel com fotos e música
 
-Abra **Reel com fotos e música**. Envie de 2 a 12 fotos PNG/JPEG/WebP (até 5 MB cada), use as setas para ordenar e escolha de 2 a 8 segundos por foto. A montagem combina zoom suave alternado com dissolução ou deslizamento; cada transição sobrepõe 0,6 segundo. O enquadramento pode preservar a foto com fundo desfocado ou preencher a tela recortando bordas.
+Abra **Reel com fotos e música**. Envie de 2 a 12 fotos PNG/JPEG/WebP/AVIF (até 25 MB cada), use as setas para ordenar e escolha de 2 a 8 segundos por foto. Fotos grandes são redimensionadas automaticamente para até 2160 pixels, convertidas para JPEG e orientadas conforme os dados EXIF, sem exigir conversão manual. O navegador tenta preparar HEIC/HEIF; quando não conseguir abrir o formato, exporte como JPEG. O servidor processa fotos com até 120 megapixels, respeitando os limites de envio. A montagem combina zoom suave alternado com dissolução ou deslizamento; cada transição sobrepõe 0,6 segundo. O enquadramento pode preservar a foto com fundo desfocado ou preencher a tela recortando bordas.
 
 Envie uma música MP3/WAV opcional (até 12 MB), ajuste o volume e revise o MP4 com áudio antes de publicar. A trilha é repetida se for curta e recebe fade de entrada/saída. Fotos, música e logo juntos têm limite de 30 MB. Use materiais autorizados para publicação. A música é incorporada ao MP4; este recurso não acessa a biblioteca musical do Instagram.
 

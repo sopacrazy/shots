@@ -9,8 +9,8 @@
     "start": "node dist/index.js",
     "test": "node --import tsx --test test/*.test.ts",
     "test:render": "node test/render-smoke.mjs",
-    "test:products": "node test/product-smoke.mjs"
-    ,"test:photos": "node test/photo-smoke.mjs"
+    "test:products": "node test/product-smoke.mjs",
+    "test:photos": "node test/photo-smoke.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.459",
@@ -23,7 +23,8 @@
     "p-queue": "^9.2.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "remotion": "^4.0.459"
+    "remotion": "^4.0.459",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

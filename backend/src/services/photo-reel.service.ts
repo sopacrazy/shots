@@ -8,12 +8,12 @@ import {affiliateUrl,publicationCaption} from './publication.service.js';
 import {enqueueEdit,ffmpegPath} from './video.service.js';
 import {withMediaLock} from './media-lock.service.js';
 import {safeUnlink} from './media-cleanup.service.js';
+import {validatePhotoFile,normalizePhotoImage} from './photo-image.service.js';
 const exec=promisify(execFile);
 export function validatePhotoReel(body:Record<string,unknown>){
   if(!Array.isArray(body.images)||body.images.length<2||body.images.length>12)throw problem('Envie de 2 a 12 fotos PNG, JPEG ou WebP');
   if(body.images.some(image=>!image||typeof image!=='object')||body.music&&typeof body.music!=='object'||body.logo&&typeof body.logo!=='object')throw problem('Arquivos inválidos');
-  const images=body.images.map(image=>validateUpload(image,'image'));
-  if(images.some(i=>i.buffer.length>5*1024*1024))throw problem('Cada foto deve ter até 5 MB');
+  const images=body.images.map(image=>validatePhotoFile(image));
   const music=body.music?validateUpload(body.music as Record<string,unknown>,'audio'):null;
   if(music&&music.buffer.length>12*1024*1024)throw problem('A música deve ter até 12 MB');
   const logo=body.logo?validateUpload(body.logo as Record<string,unknown>,'image'):null;
@@ -37,9 +37,8 @@ export async function createPhotoReel(body:Record<string,unknown>){
   try{
    const images:string[]=[];
    for(const [i,image]of input.images.entries()){
-    const url=await saveFile('audio',`photo-reels/${id}/${i}.${image.ext}`,image.buffer);paths.push(url);
-    const {stdout}=await exec(ffmpegPath('ffprobe'),['-v','error','-select_streams','v:0','-show_entries','stream=width,height','-of','json',localMediaPath(url)],{timeout:15000});
-    const stream=JSON.parse(stdout).streams?.[0];if(!stream?.width||!stream.height||stream.width>8192||stream.height>8192||stream.width*stream.height>40000000)throw problem('Uma foto está inválida ou excede 40 megapixels / 8192 pixels por lado');
+    const converted=await normalizePhotoImage(image.buffer,i);
+    const url=await saveFile('audio',`photo-reels/${id}/${i}.jpg`,converted);paths.push(url);
     images.push(url);
    }
    let musicUrl:string|null=null;
