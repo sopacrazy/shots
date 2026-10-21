@@ -11,7 +11,21 @@ React + Vite, Express e Remotion. Projetos e arquivos ficam no computador. Nenhu
 Frontend: http://localhost:3000. Backend: http://localhost:3001/api/health.
 O backend aceita conexões locais em 127.0.0.1. Porta e caminhos podem ser personalizados com as opções de `.env.example`.
 
-## Vídeos de produtos (tela inicial)
+## Navegação do estúdio
+
+A tela inicial **Visão geral** reúne os totais da biblioteca, edições recentes e atalhos de criação. O menu lateral separa as ferramentas por finalidade; no celular, use o botão de menu no topo.
+
+- **Vídeos de produtos:** Biblioteca → Descrição → Sua marca → Revisar e publicar. A biblioteca permite buscar pelo nome e filtrar por categoria.
+- **Reels com fotos:** Fotos → Personalizar → Revisar e gerar.
+- **Editor de cenas:** projetos e pastas, com etapas Tema → Roteiro → Produção → Prévia → Exportar.
+- **Garimpo Shopee:** busca de produtos e favoritos.
+- **Agendamentos:** prepare e revise uma publicação futura e acompanhe os envios.
+- **Automação do Instagram:** visão geral, simulação de respostas e configuração.
+- **Minhas edições:** histórico de vídeos e montagens, com acesso ao resultado.
+
+Alternar entre ferramentas preserva os rascunhos e arquivos selecionados durante a sessão. Os endereços `#videos`, `#photos` e demais ferramentas podem ser abertos diretamente; o botão Voltar do navegador também acompanha a navegação. Rascunhos ainda não gerados não persistem após recarregar ou fechar a página.
+
+## Vídeos de produtos
 
 ### Garimpo Shopee
 
@@ -24,7 +38,7 @@ Configure `SHOPEE_APP_ID` e `SHOPEE_APP_SECRET` no `.env` do backend. A seção 
 3. Informe sua marca d’água em texto (ex.: @sualoja) ou envie uma imagem PNG/WebP/JPEG e escolha um dos quatro cantos. PNG com transparência mantém o fundo transparente na sobreposição; texto e imagem podem ser combinados. A imagem salva pode ser reutilizada pelo histórico de edições.
 4. Gere e revise o MP4 vertical 1080×1920. O áudio original é mantido. Você pode baixar o arquivo ou publicar no Instagram após configurar a conta.
 
-Formatos de entrada: MP4, MOV, WebM ou M4V; limite de 250 MB por importação e 30 minutos por edição. Vídeos importados ficam em data/library, versões editadas em data/files/videos/edits. Descrição e histórico ficam no banco JSON local. O editor de cenas anterior continua acessível pelo botão no topo.
+Formatos de entrada: MP4, MOV, WebM ou M4V; limite de 250 MB por importação e 30 minutos por edição. Vídeos importados ficam em data/library, versões editadas em data/files/videos/edits. Descrição e histórico ficam no banco JSON local. O editor de cenas fica no menu lateral.
 
 ## Testar tudo localmente primeiro
 
@@ -42,7 +56,7 @@ Preencha descrição, link de afiliado e marca d’água (texto e/ou logo). A ge
 
 Edição de vídeos, marca d’água PNG/texto, áudio, link de afiliado, histórico e download funcionam sem configurar Instagram.
 
-Abra **Comentou LINK → resposta + Direct → Teste local — sem enviar mensagens**. Use um produto salvo ou o link de exemplo, digite LINK e clique em **Simular comentário**. A prévia mostra primeiro a resposta pública natural e depois o Direct com o link correto. O simulador não chama a Meta, não publica, não envia mensagens e não altera os registros reais de envio. Também é possível testar palavras que não devem disparar a automação.
+Abra **Automação do Instagram → Simular resposta**. Use um produto salvo ou o link de exemplo, digite LINK e clique em **Simular comentário**. A prévia mostra primeiro a resposta pública natural e depois o Direct com o link correto. O simulador não chama a Meta, não publica, não envia mensagens e não altera os registros reais de envio. Também é possível testar palavras que não devem disparar a automação.
 
 A URL pública no `.env` é opcional durante os testes locais. A validação do token consulta o perfil na Meta, mas não publica nem envia mensagens. A simulação não exige token ou conta conectada.
 
@@ -50,7 +64,7 @@ Publicação real e recebimento de comentários reais continuam dependendo de HT
 
 ## Publicar no Instagram
 
-No arquivo `.env` da raiz, preencha `INSTAGRAM_USER_ID`, `INSTAGRAM_ACCESS_TOKEN` e `INSTAGRAM_API_VERSION`. Quando for publicar, adicione `INSTAGRAM_PUBLIC_BASE_URL` com a URL HTTPS pública que permita baixar os MP4 deste backend. A URL pode ficar vazia nos testes locais. Abra **Configurar Instagram → Validar configuração do .env** para consultar o perfil. Nenhum token é incluído nas respostas da API. `INSTAGRAM_USERNAME` é preenchido pela validação.
+No arquivo `.env` da raiz, preencha `INSTAGRAM_USER_ID`, `INSTAGRAM_ACCESS_TOKEN` e `INSTAGRAM_API_VERSION`. Quando for publicar, adicione `INSTAGRAM_PUBLIC_BASE_URL` com a URL HTTPS pública que permita baixar os MP4 deste backend. A URL pode ficar vazia nos testes locais. Abra **Conectar Instagram → Verificar conexão** para consultar o perfil. Nenhum token é incluído nas respostas da API. `INSTAGRAM_USERNAME` é preenchido pela validação.
 
 Permissões: instagram_business_basic e instagram_business_content_publish. Gere o token e configure as permissões seguindo a [documentação oficial da Meta](https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/). Esta versão usa configuração por token; não implementa login OAuth nem renova tokens automaticamente.
 

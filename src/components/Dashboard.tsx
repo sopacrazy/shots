@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Play, Video, CheckCircle, FolderHeart, Plus, Clock, Loader2, Trash2, AlertTriangle, X, Pencil, Clapperboard, Sparkles, Download, Maximize2 } from 'lucide-react';
+import { Play, Video, CheckCircle, FolderHeart, Plus, Clock, Loader2, Trash2, AlertTriangle, X, Pencil, Download } from 'lucide-react';
 import type React from 'react';
 import { api, type ApiProject, type ApiMetadata } from '@/src/lib/api';
 
@@ -104,73 +104,54 @@ export default function Dashboard({ onStartProject, onEditProject }: DashboardPr
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-6xl mx-auto space-y-6 lg:space-y-10 pb-20"
+      className="max-w-6xl mx-auto space-y-5 pb-6"
     >
-      <header className="flex items-center justify-between">
+      <header className="tool-panel-heading">
         <div>
-          <h2 className="text-xl sm:text-3xl font-display font-semibold mb-2">Bem-vindo de volta!</h2>
-          <p className="text-gray-400">Pronto para criar o próximo conteúdo viral?</p>
+          <h2>Projetos por cenas</h2>
+          <p className="studio-muted">Crie vídeos com roteiro, imagens e narração, ou continue um projeto salvo.</p>
         </div>
         <button
+          type="button"
           onClick={() => onStartProject()}
-          className="group relative flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#00E5FF] to-[#7B61FF] text-white font-semibold hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(123,97,255,0.4)]"
+          className="studio-primary"
         >
-          <Clapperboard className="w-5 h-5" />
-          <span>Criar Novo Short</span>
+          <Plus className="w-4 h-4" aria-hidden="true" />
+          <span>Novo projeto</span>
         </button>
       </header>
 
       {/* Métricas reais */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3" aria-label="Resumo dos projetos">
         <MetricCard icon={<Video className="w-5 h-5 text-[#7B61FF]" />} label="Total de Projetos" value={String(projects.length)} />
         <MetricCard icon={<Clock className="w-5 h-5 text-yellow-400" />} label="Em Andamento" value={String(inProgress)} />
         <MetricCard icon={<CheckCircle className="w-5 h-5 text-emerald-400" />} label="Concluídos" value={String(completed)} />
         <MetricCard icon={<FolderHeart className="w-5 h-5 text-pink-400" />} label="Rascunhos" value={String(drafts)} />
       </section>
 
-      {/* Banner de ação */}
-      <section
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#1A1A1E] to-[#0A0A0B] border border-[#ffffff0a] p-5 sm:p-10 cursor-pointer group"
-        onClick={() => onStartProject()}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00E5FF]/10 to-[#7B61FF]/10 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="max-w-lg">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#7B61FF]/20 border border-[#7B61FF]/30 text-[#00E5FF] text-xs font-semibold uppercase tracking-wider mb-4">
-              <Sparkles className="w-3 h-3" />
-              Produção manual
-            </div>
-            <h3 className="text-xl sm:text-3xl font-display font-semibold mb-3 sm:mb-4">Editor de Shorts</h3>
-            <p className="text-gray-400 mb-8 leading-relaxed">
-              Monte vídeos curtos com seu roteiro, imagens e narração. Organize as cenas e exporte em MP4.
-            </p>
-            <div className="flex items-center gap-2 text-[#00E5FF] font-medium group-hover:gap-4 transition-all">
-              <span>Iniciar Fluxo de Criação</span>
-              <Play className="w-4 h-4 fill-current" />
-            </div>
-          </div>
-          <div className="hidden lg:flex items-center justify-center relative w-64 h-64">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#7B61FF] to-[#00E5FF] opacity-20 blur-3xl animate-pulse" />
-            <Plus className="w-20 h-20 text-white/10" />
-          </div>
+      <section className="studio-card" aria-labelledby="scenes-workflow-title">
+        <div className="tool-panel-heading"><div><h3 id="scenes-workflow-title">Um vídeo, etapa por etapa</h3><p className="studio-muted">Defina o tema, organize as cenas e revise o resultado antes de exportar.</p></div></div>
+        <div className="tool-actions">
+          <p className="studio-muted">Tema → Roteiro → Produção → Prévia → Exportar</p>
+          <button type="button" className="studio-primary" onClick={() => onStartProject()}><Play className="w-4 h-4" aria-hidden="true" />Começar um projeto</button>
         </div>
       </section>
 
       {/* Histórico real */}
       <section>
-        <h3 className="text-xl font-display font-semibold mb-6 flex items-center gap-2">
-          Histórico Recente
+        <h3 className="text-lg font-semibold mb-4">
+          Projetos recentes
         </h3>
 
         {isLoading ? (
-          <div className="flex items-center justify-center py-16 text-gray-500 gap-3">
+          <div className="flex items-center justify-center py-8 studio-muted gap-3" role="status">
             <Loader2 className="w-6 h-6 animate-spin" />
             <span>Carregando projetos...</span>
           </div>
         ) : projects.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-gray-600 gap-3">
-            <Video className="w-12 h-12 opacity-20" />
-            <p>Nenhum projeto ainda. Crie seu primeiro short!</p>
+          <div className="studio-card flex flex-col items-center justify-center py-8 studio-muted gap-3">
+            <Video className="w-8 h-8 opacity-40" aria-hidden="true" />
+            <p>Seus projetos aparecerão aqui. Use Novo projeto para começar.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3">
@@ -237,7 +218,7 @@ export default function Dashboard({ onStartProject, onEditProject }: DashboardPr
                   <h3 className="text-lg font-display font-semibold leading-snug">
                     {preview.project.title ?? preview.project.topic}
                   </h3>
-                  <button onClick={() => setPreview(null)} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors flex-shrink-0">
+                  <button type="button" aria-label="Fechar prévia do vídeo" onClick={() => setPreview(null)} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-colors flex-shrink-0">
                     <X className="w-4 h-4" />
                   </button>
                 </div>
@@ -337,14 +318,9 @@ export default function Dashboard({ onStartProject, onEditProject }: DashboardPr
 
 function MetricCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="bg-[#141415]/50 border border-[#ffffff0a] rounded-2xl p-6 backdrop-blur-sm hover:bg-[#141415] transition-colors">
-      <div className="flex items-start justify-between mb-4">
-        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
-          {icon}
-        </div>
-      </div>
-      <p className="text-gray-400 text-sm mb-1">{label}</p>
-      <h4 className="text-2xl font-display font-semibold">{value}</h4>
+    <div className="studio-card flex items-center gap-3">
+      <div className="w-9 h-9 shrink-0 rounded-lg bg-white/5 flex items-center justify-center" aria-hidden="true">{icon}</div>
+      <div><p className="studio-muted text-xs mb-1">{label}</p><strong className="text-xl font-semibold">{value}</strong></div>
     </div>
   );
 }
@@ -362,60 +338,63 @@ function HistoryItem({
   onView?: () => void;
 }) {
   return (
-    <div
-      className="flex items-center gap-4 p-4 rounded-2xl bg-[#141415]/30 border border-[#ffffff0a] hover:bg-[#141415] transition-colors cursor-pointer group"
-      onClick={onView}
-    >
+    <div className="flex items-center gap-3 p-3 rounded-xl bg-[#141415]/30 border border-[#ffffff0a] hover:bg-[#141415] transition-colors group">
+      <button type="button" onClick={onView ?? onEdit} aria-label={`${onView?'Ver prévia de':'Editar projeto'} ${title}`} className="flex items-center gap-3 flex-1 min-w-0 text-left rounded-lg">
       {/* Thumbnail 9:16 */}
-      <div className="w-14 h-[84px] rounded-xl bg-[#2A2A2D] flex-shrink-0 relative overflow-hidden">
+      <span className="block w-12 h-[72px] rounded-lg bg-[#2A2A2D] flex-shrink-0 relative overflow-hidden">
         {thumbnailUrl ? (
           <>
             <img src={thumbnailUrl} alt="" className="w-full h-full object-cover" />
             {status === 'done' && onView && (
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Play className="w-5 h-5 text-white fill-white" />
-              </div>
+              </span>
             )}
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
+          <span className="w-full h-full flex items-center justify-center">
             {status === 'done'     ? <CheckCircle className="w-5 h-5 text-emerald-400 opacity-60" />
             : status === 'progress' ? <Loader2 className="w-5 h-5 text-yellow-400 opacity-60 animate-spin" />
             : <Video className="w-5 h-5 text-gray-600" />}
-          </div>
+          </span>
         )}
-      </div>
+      </span>
 
-      <div className="flex-1 min-w-0">
-        <h4 className="font-medium truncate mb-1 text-white group-hover:text-[#00E5FF] transition-colors">
+      <span className="block flex-1 min-w-0">
+        <span className="block font-medium truncate mb-1 text-white">
           {title}
-        </h4>
-        <div className="flex items-center gap-3 text-xs text-gray-500">
+        </span>
+        <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
           <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {statusLabel}</span>
-          <span>•</span>
+          <span aria-hidden="true">•</span>
           <span>{date}</span>
-        </div>
-      </div>
+        </span>
+      </span>
+      </button>
 
       <div className="flex items-center gap-1 flex-shrink-0">
         <button
-          onClick={e => { e.stopPropagation(); onEdit(); }}
-          className="opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-[#7B61FF]/20 text-[#7B61FF] transition-all"
+          type="button"
+          onClick={onEdit}
+          className="min-w-11 min-h-11 flex items-center justify-center rounded-lg hover:bg-[#7B61FF]/20 text-[#7B61FF] transition-colors"
           title="Editar projeto"
+          aria-label={`Editar projeto ${title}`}
         >
           <Pencil className="w-4 h-4" />
         </button>
         <button
-          onClick={e => { e.stopPropagation(); onDelete(); }}
-          className="opacity-0 group-hover:opacity-100 p-2 rounded-lg hover:bg-rose-500/20 text-rose-400 transition-all"
+          type="button"
+          onClick={onDelete}
+          className="min-w-11 min-h-11 flex items-center justify-center rounded-lg hover:bg-rose-500/20 text-rose-400 transition-colors"
           title="Excluir projeto"
+          aria-label={`Excluir projeto ${title}`}
         >
           <Trash2 className="w-4 h-4" />
         </button>
-        {status === 'done'     && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] ml-1" />}
-        {status === 'progress' && <div className="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_8px_#eab308] animate-pulse ml-1" />}
-        {status === 'draft'    && <div className="w-2 h-2 rounded-full bg-gray-500 ml-1" />}
-        {status === 'error'    && <div className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e] ml-1" />}
+        {status === 'done'     && <div className="w-2 h-2 rounded-full bg-emerald-500 ml-1" aria-hidden="true" />}
+        {status === 'progress' && <div className="w-2 h-2 rounded-full bg-yellow-500 ml-1" aria-hidden="true" />}
+        {status === 'draft'    && <div className="w-2 h-2 rounded-full bg-gray-500 ml-1" aria-hidden="true" />}
+        {status === 'error'    && <div className="w-2 h-2 rounded-full bg-rose-500 ml-1" aria-hidden="true" />}
       </div>
     </div>
   );
